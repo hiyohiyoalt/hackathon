@@ -39,7 +39,7 @@ func init() {
 	// mysqlHost := "unix(cloudsql/term3-hiyori-ito:us-central1:uttc)"
 	// mysqlDatabase := "hackathon"
 
-	connStr := fmt.Sprintf("%s:%s@%s/%s", mysqlUser, mysqlPwd, mysqlHost, mysqlDatabase)
+	connStr := fmt.Sprintf("%s:%s@%s/%s?parseTime=true", mysqlUser, mysqlPwd, mysqlHost, mysqlDatabase)
 	_db, err := sql.Open("mysql", connStr)
 
 	if err != nil {
