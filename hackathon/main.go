@@ -34,9 +34,13 @@ func init() {
 	mysqlPwd := os.Getenv("MYSQL_PWD")
 	mysqlHost := os.Getenv("MYSQL_HOST")
 	mysqlDatabase := os.Getenv("MYSQL_DATABASE")
+	// mysqlUser := "uttc"
+	// mysqlPwd := "Iein7792"
+	// mysqlHost := "unix(cloudsql/term3-hiyori-ito:us-central1:uttc)"
+	// mysqlDatabase := "hackathon"
 
 	connStr := fmt.Sprintf("%s:%s@%s/%s", mysqlUser, mysqlPwd, mysqlHost, mysqlDatabase)
-	db, err := sql.Open("mysql", connStr)
+	_db, err := sql.Open("mysql", connStr)
 
 	if err != nil {
 		log.Fatalf("fail: sql.Open, %v\n", err)
@@ -164,7 +168,7 @@ func main() {
 
 	// 8000番ポートでリクエストを待ち受ける
 	log.Println("Listening...")
-	if err := http.ListenAndServe(":8000", nil); err != nil {
+	if err := http.ListenAndServe(":8080", nil); err != nil {
 		log.Fatal(err)
 	}
 }
