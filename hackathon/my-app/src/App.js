@@ -31,7 +31,7 @@ const [name, setName] = useState("");
   const fetchUsers = async () => {
  
     try {
-      const res = await fetch("http://localhost:8000/user",
+      const res = await fetch("http://localhost:8080/user",
       {
         method:"GET",
         mode:"cors",
@@ -98,7 +98,7 @@ const [name, setName] = useState("");
     }
 
     try {
-      const result = await fetch("http://localhost:8000/user", {
+      const result = await fetch("http://localhost:8080/user", {
         method: "POST",
         mode:"cors",
         body: JSON.stringify({

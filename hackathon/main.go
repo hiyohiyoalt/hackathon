@@ -34,10 +34,6 @@ func init() {
 	mysqlPwd := os.Getenv("MYSQL_PWD")
 	mysqlHost := os.Getenv("MYSQL_HOST")
 	mysqlDatabase := os.Getenv("MYSQL_DATABASE")
-	// mysqlUser := "uttc"
-	// mysqlPwd := "Iein7792"
-	// mysqlHost := "unix(cloudsql/term3-hiyori-ito:us-central1:uttc)"
-	// mysqlDatabase := "hackathon"
 
 	connStr := fmt.Sprintf("%s:%s@%s/%s?parseTime=true", mysqlUser, mysqlPwd, mysqlHost, mysqlDatabase)
 	_db, err := sql.Open("mysql", connStr)
@@ -45,7 +41,7 @@ func init() {
 	if err != nil {
 		log.Fatalf("fail: sql.Open, %v\n", err)
 	}
-	
+
 	// ①-3
 	if err := _db.Ping(); err != nil {
 		log.Fatalf("fail: _db.Ping, %v\n", err)
