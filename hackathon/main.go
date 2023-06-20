@@ -62,60 +62,60 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Methods", "GET,POST,OPTIONS")
 	w.Header().Set("Content-Type", "application/json")
 	switch r.Method {
-	case http.MethodOptions:
-		w.WriteHeader(http.StatusOK)
-		return
-	case http.MethodDelete:
+	// case http.MethodOptions:
+	// 	w.WriteHeader(http.StatusOK)
+	// 	return
+	// case http.MethodDelete:
 
-		id := r.URL.Query().Get("id")
-		if id == "" {
-			log.Println("fail: content is empty")
-			w.WriteHeader(http.StatusBadRequest)
-			return
-		}
-		_, err := db.Query("DELETE FROM message WHERE id = ?", id)
-		if err != nil {
-			log.Printf("fail: db.Query, %v\n", err)
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-	case http.MethodPut:
-		id := r.URL.Query().Get("id")
-		if id == "" {
-			log.Println("fail: content is empty")
-			w.WriteHeader(http.StatusBadRequest)
-			return
-		}
-		type UpdateMessage struct {
-			Content string `json:"content"`
-			Edited  string `json:"edited"`
-		}
+	// 	id := r.URL.Query().Get("id")
+	// 	if id == "" {
+	// 		log.Println("fail: content is empty")
+	// 		w.WriteHeader(http.StatusBadRequest)
+	// 		return
+	// 	}
+	// 	_, err := db.Query("DELETE FROM message WHERE id = ?", id)
+	// 	if err != nil {
+	// 		log.Printf("fail: db.Query, %v\n", err)
+	// 		w.WriteHeader(http.StatusInternalServerError)
+	// 		return
+	// 	}
+	// case http.MethodPut:
+	// 	id := r.URL.Query().Get("id")
+	// 	if id == "" {
+	// 		log.Println("fail: content is empty")
+	// 		w.WriteHeader(http.StatusBadRequest)
+	// 		return
+	// 	}
+	// 	type UpdateMessage struct {
+	// 		Content string `json:"content"`
+	// 		Edited  string `json:"edited"`
+	// 	}
 
-		var updatemessage UpdateMessage
-		json.NewDecoder(r.Body).Decode(&updatemessage)
-		content := updatemessage.Content
-		edited := "true"
+	// 	var updatemessage UpdateMessage
+	// 	json.NewDecoder(r.Body).Decode(&updatemessage)
+	// 	content := updatemessage.Content
+	// 	edited := "true"
 
-		//query:="insert into`user`(`id`,`name`,`age`)values (id,name,age)"
-		//_,err:=db.ExecContext(context.Background(),query)
-		_, err := db.Exec("UPDATE message SET content=?,edited=? WHERE id=?", content, edited, id)
-		if err != nil {
-			log.Fatalf("impossible update message:%s", err)
-			return
-		}
+	// 	//query:="insert into`user`(`id`,`name`,`age`)values (id,name,age)"
+	// 	//_,err:=db.ExecContext(context.Background(),query)
+	// 	_, err := db.Exec("UPDATE message SET content=?,edited=? WHERE id=?", content, edited, id)
+	// 	if err != nil {
+	// 		log.Fatalf("impossible update message:%s", err)
+	// 		return
+	// 	}
 
-		type responseMessage struct {
-			Message string `json:"message"`
-		}
-		bytes, err := json.Marshal(responseMessage{
-			Message: fmt.Sprintf("Id=%v", id),
-		})
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-		w.Write(bytes)
-		w.WriteHeader(http.StatusOK)
+	// 	type responseMessage struct {
+	// 		Message string `json:"message"`
+	// 	}
+	// 	bytes, err := json.Marshal(responseMessage{
+	// 		Message: fmt.Sprintf("Id=%v", id),
+	// 	})
+	// 	if err != nil {
+	// 		w.WriteHeader(http.StatusInternalServerError)
+	// 		return
+	// 	}
+	// 	w.Write(bytes)
+	// 	w.WriteHeader(http.StatusOK)
 
 	case http.MethodGet:
 		// ②-1
