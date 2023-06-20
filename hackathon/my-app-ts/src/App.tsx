@@ -32,7 +32,7 @@ type Message={
   id:string;
   editorname:string;
   content:string;
-  edited:string;
+  edited:boolean;
 }
 
 function App(){
@@ -56,7 +56,7 @@ function App(){
 
       const messages:Message[] = await res.json();
       setMessage(messages);
-      console.log(message);
+      console.log(messages);
      
     } catch (err) {
       console.error(err);
