@@ -56,6 +56,7 @@ function App(){
 
       const messages:Message[] = await res.json();
       setMessage(messages);
+      console.log(message);
      
     } catch (err) {
       console.error(err);
