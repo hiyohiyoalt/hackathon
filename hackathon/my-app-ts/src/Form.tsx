@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 type Props = {
-  onSubmit: (editorname: string, content: string,edited:string) => void;
+  onSubmit: (editorname: string, content: string) => void;
 };
 
 const Form = (props: Props) => {
@@ -11,7 +11,7 @@ const Form = (props: Props) => {
 
   const submit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    props.onSubmit(editorname, content,edited);
+    props.onSubmit(editorname, content);
   };
 
   return (

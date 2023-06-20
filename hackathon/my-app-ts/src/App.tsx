@@ -62,7 +62,7 @@ function App(){
       console.error(err);
     }
   };
-  const onSubmit=async(editorname:string,content:string,edited:string)=>{
+  const onSubmit=async(editorname:string,content:string)=>{
     
     if (!content) {
       alert("Please enter name");
@@ -75,7 +75,7 @@ function App(){
         body: JSON.stringify({
           editorname: editorname,
           content: content,
-          edited:edited
+          // edited:edited
         }),
       });
       if (!result.ok) {
