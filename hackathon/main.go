@@ -119,12 +119,12 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 	case http.MethodGet:
 		// ②-1
-		content := r.URL.Query().Get("content") // To be filled
-		if content == "" {
-			log.Println("fail: content is empty")
-			w.WriteHeader(http.StatusBadRequest)
-			return
-		}
+		// content := r.URL.Query().Get("content") // To be filled
+		// if content == "" {
+		// 	log.Println("fail: content is empty")
+		// 	w.WriteHeader(http.StatusBadRequest)
+		// 	return
+		// }
 
 		// ②-2
 		//rows, err := db.Query("SELECT id, name, age FROM user WHERE name = ?", name)
