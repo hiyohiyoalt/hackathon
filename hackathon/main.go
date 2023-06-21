@@ -25,7 +25,7 @@ type SendMessageResForHTTPGet struct {
 	Id         string `json:"id"`
 	EditorName string `json:"editorname"`
 	Content    string `json:"content"`
-	Edited     bool   `json:"edited"`
+	Edited     string   `json:"edited"`
 }
 
 // ① GoプログラムからMySQLへ接続

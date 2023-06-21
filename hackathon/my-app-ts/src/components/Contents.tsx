@@ -9,9 +9,11 @@ type Message={
   edited:string;
 }
 
+
+
 function Contents(){
   const [messages,setMessage]=useState <Message[]>([]);
-  const [content,setContent]=useState <string>("");
+//   const [content,setContent]=useState <string>("");
   
 
   const fetchUsers = async () => {
@@ -133,14 +135,18 @@ function Contents(){
                     <button id={m.id} onClick={()=>onDelete(m.id)}>削除</button>
                     <form style={{ display: "flex", flexDirection: "column" }} onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
                          e.preventDefault();
-                         {onUpdate(m.id,content)}}}>
+                         {onUpdate(m.id,m.content)}}}>
      
                     <label>Message: </label>
                     <input
                         type={"text"}
                         style={{ marginBottom: 20 }}
-                        value={content}
-                        onChange={(e) => setContent(e.target.value)}
+                        value={m.content}
+                        onChange={(e) => setMessage((prevState) =>
+                              prevState.map((v) => (v=== m ? {id:m.id,editorname:m.editorname,content:e.target.value,edited:m.edited} : v))
+                            )                        
+                          }
+                    
                     ></input>
                     <button type={"submit"}>編集</button>
                     <span>{m.edited}</span>
