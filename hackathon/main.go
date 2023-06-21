@@ -87,21 +87,18 @@ func handler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	case http.MethodPut:
-		id := r.URL.Query().Get("id")
-		if id == "" {
-			log.Println("fail: content is empty")
-			w.WriteHeader(http.StatusBadRequest)
-			return
-		}
+
 		type UpdateMessage struct {
+			Id      string `json:"id"`
 			Content string `json:"content"`
 			Edited  string `json:"edited"`
 		}
 
 		var updatemessage UpdateMessage
 		json.NewDecoder(r.Body).Decode(&updatemessage)
+		id := updatemessage.Id
 		content := updatemessage.Content
-		edited := "true"
+		edited := updatemessage.Edited
 
 		//query:="insert into`user`(`id`,`name`,`age`)values (id,name,age)"
 		//_,err:=db.ExecContext(context.Background(),query)

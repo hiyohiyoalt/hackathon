@@ -11,6 +11,7 @@ type Message={
 
 function Contents(){
   const [messages,setMessage]=useState <Message[]>([]);
+  const [content,setContent]=useState <string>("");
   
 
   const fetchUsers = async () => {
@@ -66,7 +67,7 @@ function Contents(){
   const onDelete=async(id:string)=>{
     
     try {
-      const del = await fetch("https://hiyohiyoalt77-hfa7mfor4q-uc.a.run.app/user"+id, {
+      const del = await fetch("https://hiyohiyoalt77-hfa7mfor4q-uc.a.run.app/user", {
         method: "DELETE",
         mode:"cors",
         body: JSON.stringify({
@@ -89,6 +90,35 @@ function Contents(){
     fetchUsers();
   }
   ,[])
+  const onUpdate=async(id:string,content:string)=>{
+    
+    try {
+      const update = await fetch("https://hiyohiyoalt77-hfa7mfor4q-uc.a.run.app/user", {
+        method: "PUT",
+        mode:"cors",
+        body: JSON.stringify({
+          id: id,
+          content:content,
+          edited:"編集済み"
+        //   content: content,
+          // edited:edited
+        }),
+      });
+      if (!update.ok) {
+        throw Error(`Failed to create user: ${update.status}`);
+      }
+
+      
+      fetchUsers();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  useEffect(() => {
+    fetchUsers();
+  }
+  ,[])
+  
 
   return (
     <div className="Contents">
@@ -101,6 +131,21 @@ function Contents(){
                  <div>
                     <span>{m.editorname}</span><span>{m.content}</span>
                     <button id={m.id} onClick={()=>onDelete(m.id)}>削除</button>
+                    <form style={{ display: "flex", flexDirection: "column" }} onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+                         e.preventDefault();
+                         {onUpdate(m.id,content)}}}>
+     
+                    <label>Message: </label>
+                    <input
+                        type={"text"}
+                        style={{ marginBottom: 20 }}
+                        value={content}
+                        onChange={(e) => setContent(e.target.value)}
+                    ></input>
+                    <button type={"submit"}>編集</button>
+                    <span>{m.edited}</span>
+                    </form>
+
                  </div>
                </div>
               )
