@@ -11,6 +11,7 @@ type Message={
 
 function Contents(){
   const [messages,setMessage]=useState <Message[]>([]);
+  
 
   const fetchUsers = async () => {
  
@@ -62,10 +63,10 @@ function Contents(){
       console.error(err);
     }
   };
-  const onDelete=async()=>{
+  const onDelete=async(id:string)=>{
     
     try {
-      const del = await fetch("https://hiyohiyoalt77-hfa7mfor4q-uc.a.run.app/user", {
+      const del = await fetch("https://hiyohiyoalt77-hfa7mfor4q-uc.a.run.app/user"+id, {
         method: "DELETE",
         mode:"cors"
         // body: JSON.stringify({
@@ -88,7 +89,7 @@ function Contents(){
     fetchUsers();
   }
   ,[])
-  
+
   return (
     <div className="Contents">
       
@@ -99,7 +100,7 @@ function Contents(){
         return(<div key={m.id}>
                  <div>
                     <span>{m.editorname}</span><span>{m.content}</span>
-                    <button onClick={onDelete}>削除</button>
+                    <button id={m.id} onClick={()=>onDelete(m.id)}>削除</button>
                  </div>
                </div>
               )
