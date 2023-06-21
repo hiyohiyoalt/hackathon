@@ -6,7 +6,7 @@ type Message={
   id:string;
   editorname:string;
   content:string;
-  edited:boolean;
+  edited:string;
 }
 
 function Contents(){
