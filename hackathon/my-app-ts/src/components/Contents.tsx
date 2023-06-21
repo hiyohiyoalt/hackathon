@@ -92,7 +92,7 @@ function Contents(){
     fetchUsers();
   }
   ,[])
-  const onUpdate=async(id:string,content:string)=>{
+  const onUpdate=async(id:string,content:string,edited:string)=>{
     
     try {
       const update = await fetch("https://hiyohiyoalt77-hfa7mfor4q-uc.a.run.app/user", {
@@ -101,7 +101,7 @@ function Contents(){
         body: JSON.stringify({
           id: id,
           content:content,
-          edited:"編集済み"
+          edited:edited
         //   content: content,
           // edited:edited
         }),
@@ -135,7 +135,7 @@ function Contents(){
                     <button id={m.id} onClick={()=>onDelete(m.id)}>削除</button>
                     <form style={{ display: "flex", flexDirection: "column" }} onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
                          e.preventDefault();
-                         {onUpdate(m.id,m.content)}}}>
+                         {onUpdate(m.id,m.content,"編集済み編集済み")}}}>
      
                     <label>Message: </label>
                     <input
