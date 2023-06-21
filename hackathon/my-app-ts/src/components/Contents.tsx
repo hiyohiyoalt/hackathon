@@ -68,12 +68,12 @@ function Contents(){
     try {
       const del = await fetch("https://hiyohiyoalt77-hfa7mfor4q-uc.a.run.app/user"+id, {
         method: "DELETE",
-        mode:"cors"
-        // body: JSON.stringify({
-        //   editorname: editorname,
+        mode:"cors",
+        body: JSON.stringify({
+          id: id
         //   content: content,
           // edited:edited
-        // }),
+        }),
       });
       if (!del.ok) {
         throw Error(`Failed to create user: ${del.status}`);

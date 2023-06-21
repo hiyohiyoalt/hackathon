@@ -67,12 +67,19 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		return
 	case http.MethodDelete:
 
-		id := r.URL.Query().Get("id")
-		if id == "" {
-			log.Println("fail: content is empty")
-			w.WriteHeader(http.StatusBadRequest)
-			return
+		// id := r.URL.Query().Get("id")
+		// if id == "" {
+		// 	log.Println("fail: content is empty")
+		// 	w.WriteHeader(http.StatusBadRequest)
+		// 	return
+		// }
+		type Delete struct {
+			Id string `json:"id"`
 		}
+		var delete Delete
+		json.NewDecoder(r.Body).Decode(&delete)
+		id := delete.Id
+
 		_, err := db.Query("DELETE FROM message WHERE id = ?", id)
 		if err != nil {
 			log.Printf("fail: db.Query, %v\n", err)
