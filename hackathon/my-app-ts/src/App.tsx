@@ -36,7 +36,7 @@ type Message={
 }
 
 function App(){
-  const [message,setMessage]=useState <Message[]>([]);
+  const [messages,setMessage]=useState <Message[]>([]);
 
   const fetchUsers = async () => {
  
@@ -95,6 +95,9 @@ function App(){
   return (
     <div className="App">
       <Form onSubmit={onSubmit} />
+      {messages.map((m)=>{
+        return(<div key={m.id}>{m.content}</div>)
+      })}
 
     </div>
   )
