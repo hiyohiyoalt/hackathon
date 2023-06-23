@@ -108,18 +108,18 @@ func handler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		type responseMessage struct {
-			Message string `json:"message"`
-		}
-		bytes, err := json.Marshal(responseMessage{
-			Message: fmt.Sprintf("Id=%v", id),
-		})
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-		w.Write(bytes)
-		w.WriteHeader(http.StatusOK)
+		// type responseMessage struct {
+		// 	Message string `json:"message"`
+		// }
+		// bytes, err := json.Marshal(responseMessage{
+		// 	Message: fmt.Sprintf("Id=%v", id),
+		// })
+		// if err != nil {
+		// 	w.WriteHeader(http.StatusInternalServerError)
+		// 	return
+		// }
+		// w.Write(bytes)
+		// w.WriteHeader(http.StatusOK)
 
 	case http.MethodGet:
 		// ②-1

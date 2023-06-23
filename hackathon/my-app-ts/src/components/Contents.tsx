@@ -135,7 +135,7 @@ function Contents(){
                     <button id={m.id} onClick={()=>onDelete(m.id)}>削除</button>
                     <form style={{ display: "flex", flexDirection: "column" }} onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
                          e.preventDefault();
-                         {onUpdate(m.id,m.content,"編集済み編集済み")}}}>
+                         {onUpdate(m.id,m.content,m.edited)}}}>
      
                     <label>Message: </label>
                     <input
@@ -143,7 +143,7 @@ function Contents(){
                         style={{ marginBottom: 20 }}
                         value={m.content}
                         onChange={(e) => setMessage((prevState) =>
-                              prevState.map((v) => (v=== m ? {id:m.id,editorname:m.editorname,content:e.target.value,edited:m.edited} : v))
+                              prevState.map((v) => (v=== m ? {id:m.id,editorname:m.editorname,content:e.target.value,edited:"編集済み"} : v))
                             )                        
                           }
                     
