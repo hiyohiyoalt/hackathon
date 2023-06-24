@@ -104,7 +104,7 @@ function Contents(){
     
     try {
       const update = await fetch("https://hiyohiyoalt77-hfa7mfor4q-uc.a.run.app/user", {
-        method: "PATCH",
+        method: "PUT",
         mode:"cors",
         body: JSON.stringify({
           id: reid,
