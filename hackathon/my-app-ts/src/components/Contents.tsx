@@ -103,10 +103,11 @@ function Contents(){
   const onUpdate=async(reid:string,recontent:string)=>{
     
     try {
-      const update = await fetch("https://hiyohiyoalt77-hfa7mfor4q-uc.a.run.app/user"+reid, {
-        method: "PUT",
+      const update = await fetch("https://hiyohiyoalt77-hfa7mfor4q-uc.a.run.app/user", {
+        method: "PATCH",
         mode:"cors",
         body: JSON.stringify({
+          id: reid,
           content:recontent,
           edited:"編集済み"
         //   content: content,
