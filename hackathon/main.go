@@ -211,7 +211,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 		//query:="insert into`user`(`id`,`name`,`age`)values (id,name,age)"
 		//_,err:=db.ExecContext(context.Background(),query)
-		_, err := db.Exec("INSERT INTO message (id, editorname, content,edited) VALUES(?, ?, ?,"")", id, editorname, content)
+		_, err := db.Exec("INSERT INTO message (id, editorname, content,edited) VALUES(?, ?, ?, ?)", id, editorname, content,edited)
 		if err != nil {
 			log.Fatalf("impossible insert message:%s", err)
 			return

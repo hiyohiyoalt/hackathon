@@ -59,8 +59,8 @@ function Contents(){
         mode:"cors",
         body: JSON.stringify({
           editorname: editorname,
-          content: content,
-          edited:""
+          content: content
+          
         }),
       });
       if (!result.ok) {
