@@ -60,7 +60,7 @@ function Contents(){
         body: JSON.stringify({
           editorname: editorname,
           content: content,
-          // edited:edited
+          edited:"111"
         }),
       });
       if (!result.ok) {
@@ -138,9 +138,16 @@ function Contents(){
       
       {messages.map((m)=>{
         return(<div key={m.id}>
-                 <div>
-                    <span>{m.editorname}</span><span>{m.id}</span><span>{m.content}</span><span>{m.edited}</span>
-                    <button id={m.id} onClick={()=>onDelete(m.id)}>削除</button>
+                 <div className='display'>
+                  <div className='name-display'>
+                    <span className='editorname-display'>{m.editorname}</span><span className='id-display'>{m.id}</span>
+                  </div>
+                  <div className='contents-display'>
+                     <span className='content-display'>{m.content}</span><span className='edited-display'>{m.edited}</span>
+                     <button className='delete-button' id={m.id} onClick={()=>onDelete(m.id)}>削除</button>
+
+                  </div>
+                    
                     {/* <form style={{ display: "flex", flexDirection: "column" }} onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
                          e.preventDefault();
                          {onUpdate(m.id,m.content,m.edited)}}}>

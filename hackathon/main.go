@@ -179,7 +179,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 			Id         string `json:"id"`
 			EditorName string `json:"editorname"`
 			Content    string `json:"content"`
-			Edited     bool   `json:"edited"`
+			Edited     string   `json:"edited"`
 		}
 
 		fmt.Println(r)
