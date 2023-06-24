@@ -60,6 +60,7 @@ function Contents(){
         body: JSON.stringify({
           editorname: editorname,
           content: content,
+          edited:""
           
         }),
       });
