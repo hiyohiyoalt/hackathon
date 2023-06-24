@@ -1,6 +1,8 @@
 import React from 'react';
 import Form from  "../Form";
+import EditForm from  "../EditForm";
 import { useEffect, useState } from "react";
+import '../App.css';
 
 type Message={
   id:string;
@@ -8,11 +10,16 @@ type Message={
   content:string;
   edited:string;
 }
+// type EditMessage={
+//   id:string;
+//   editedcontent:string;
+// }
 
 
 
 function Contents(){
   const [messages,setMessage]=useState <Message[]>([]);
+  // const [editmessage,setEditMessage]=useState <EditMessage[]>([]);
 //   const [content,setContent]=useState <string>("");
   
 
@@ -92,16 +99,16 @@ function Contents(){
     fetchUsers();
   }
   ,[])
-  const onUpdate=async(id:string,content:string,edited:string)=>{
+ 
+  const onUpdate=async(reid:string,recontent:string)=>{
     
     try {
-      const update = await fetch("https://hiyohiyoalt77-hfa7mfor4q-uc.a.run.app/user", {
+      const update = await fetch("https://hiyohiyoalt77-hfa7mfor4q-uc.a.run.app/user"+reid, {
         method: "PUT",
         mode:"cors",
         body: JSON.stringify({
-          id: id,
-          content:content,
-          edited:edited
+          content:recontent,
+          edited:"編集済み"
         //   content: content,
           // edited:edited
         }),
@@ -124,16 +131,16 @@ function Contents(){
 
   return (
     <div className="Contents">
-      
-      
+
       <Form onSubmit={onSubmit} />
+      <EditForm onUpdate={onUpdate} />
       
       {messages.map((m)=>{
         return(<div key={m.id}>
                  <div>
-                    <span>{m.editorname}</span><span>{m.content}</span>
+                    <span>{m.editorname}</span><span>{m.id}</span><span>{m.content}</span><span>{m.edited}</span>
                     <button id={m.id} onClick={()=>onDelete(m.id)}>削除</button>
-                    <form style={{ display: "flex", flexDirection: "column" }} onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+                    {/* <form style={{ display: "flex", flexDirection: "column" }} onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
                          e.preventDefault();
                          {onUpdate(m.id,m.content,m.edited)}}}>
      
@@ -146,11 +153,12 @@ function Contents(){
                               prevState.map((v) => (v=== m ? {id:m.id,editorname:m.editorname,content:e.target.value,edited:"編集済み"} : v))
                             )                        
                           }
+                        // onChange={(e) => setEditMessage((prevState)=>([{id:m.id,editedcontent:e.target.value}]))}
                     
                     ></input>
                     <button type={"submit"}>編集</button>
                     <span>{m.edited}</span>
-                    </form>
+                    </form> */}
 
                  </div>
                </div>

@@ -36,3 +36,18 @@
     transform: rotate(360deg);
   }
 }
+.submitform{
+  position: fixed;
+  top: 10;
+  background: #000;  
+  width: 100%;
+}
+.editform{
+  position: fixed;
+  top: 10;
+  right:0;
+  background: #000;  
+}
+.namelabel{
+  color: #61dafb;
+}

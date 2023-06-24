@@ -15,8 +15,9 @@ const Form = (props: Props) => {
   };
 
   return (
-    <form style={{ display: "flex", flexDirection: "column" }} onSubmit={submit}>
-      <label>Name: </label>
+    <div className="submitform">
+      <form style={{ display: "flex", flexDirection: "column" }} onSubmit={submit}>
+      <label className="namelabel">Name: </label>
       <input
         type={"text"}
         value={editorname}
@@ -31,6 +32,8 @@ const Form = (props: Props) => {
       ></input>
       <button type={"submit"}>送信</button>
     </form>
+    </div>
+    
   );
 };
 
