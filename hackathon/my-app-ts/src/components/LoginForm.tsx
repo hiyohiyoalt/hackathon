@@ -33,7 +33,7 @@ export const LoginForm: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="loginpack">
       <button onClick={signInWithGoogle}>
         Googleでログイン
       </button>

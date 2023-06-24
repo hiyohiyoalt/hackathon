@@ -15,13 +15,13 @@ const EditForm = (props: Props) => {
 
   return (
     <form className="editform" style={{ display: "flex", flexDirection: "column" }} onSubmit={update}>
-      <label>Id: </label>
+      <label className="label">Id: </label>
       <input
         type={"text"}
         value={reid}
         onChange={(e) => setReid(e.target.value)}
       ></input>
-      <label>Edit: </label>
+      <label className="label">Edit: </label>
       <input
         type={"text"}
         style={{ marginBottom: 20 }}

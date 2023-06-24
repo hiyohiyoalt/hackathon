@@ -17,13 +17,13 @@ const Form = (props: Props) => {
   return (
     <div className="submitform">
       <form style={{ display: "flex", flexDirection: "column" }} onSubmit={submit}>
-      <label className="namelabel">Name: </label>
+      <label className="label">Name: </label>
       <input
         type={"text"}
         value={editorname}
         onChange={(e) => setEditorname(e.target.value)}
       ></input>
-      <label>Message: </label>
+      <label className="label">Message: </label>
       <input
         type={"text"}
         style={{ marginBottom: 20 }}

@@ -21,7 +21,13 @@ function Contents(){
   const [messages,setMessage]=useState <Message[]>([]);
   // const [editmessage,setEditMessage]=useState <EditMessage[]>([]);
 //   const [content,setContent]=useState <string>("");
-  
+  const [execute,setExecute]=useState<boolean>(false);
+  const EditingHandler=()=>{
+    setExecute(true);
+  }
+  const SubmittingHandler=()=>{
+    setExecute(false);
+  }
 
   const fetchUsers = async () => {
  
@@ -110,7 +116,7 @@ function Contents(){
         body: JSON.stringify({
           id: reid,
           content:recontent,
-          edited:"編集済み"
+          edited:"(編集済み)"
         //   content: content,
           // edited:edited
         }),
@@ -134,16 +140,22 @@ function Contents(){
   return (
     <div className="Contents">
 
-      <Form onSubmit={onSubmit} />
-      <EditForm onUpdate={onUpdate} />
+      {/* <Form onSubmit={onSubmit} />
+      <EditForm onUpdate={onUpdate} /> */}
+      {!execute && <div><button className="changingform" onClick={EditingHandler}>編集に切り替え</button><Form onSubmit={onSubmit} /></div>}
+      {execute && <div><button className="changingform" onClick={SubmittingHandler}>送信に切り替え</button><EditForm onUpdate={onUpdate} /></div>}
       
+      <div className='adjust'></div>
       {messages.map((m)=>{
         return(<div key={m.id}>
                  <div className='display'>
                   <div className='name-display'>
-                    <span className='editorname-display'>{m.editorname}</span><span className='id-display'>{m.id}</span>
+                    <span className='editorname-display'>{m.editorname}</span>
                   </div>
                   <div className='contents-display'>
+                    <div>
+                    <span className='id-display1'>ID=</span><span className='id-display2'>{m.id}</span>
+                    </div>
                      <span className='content-display'>{m.content}</span><span className='edited-display'>{m.edited}</span>
                      <button className='delete-button' id={m.id} onClick={()=>onDelete(m.id)}>削除</button>
 
