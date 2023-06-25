@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/oklog/ulid/v2"
 	"log"
 	"net/http"
@@ -13,15 +14,18 @@ import (
 	//"context"
 	"math/rand"
 	"time"
-	"unicode/utf8"
-
-	_ "github.com/go-sql-driver/mysql"
 )
 
 type UserResForHTTPGet struct {
 	Id   string `json:"id"`
 	Name string `json:"name"`
 	Age  int    `json:"age"`
+}
+type SendMessageResForHTTPGet struct {
+	Id         string `json:"id"`
+	EditorName string `json:"editorname"`
+	Content    string `json:"content"`
+	Edited     string   `json:"edited"`
 }
 
 // ① GoプログラムからMySQLへ接続
@@ -35,34 +39,105 @@ func init() {
 	mysqlHost := os.Getenv("MYSQL_HOST")
 	mysqlDatabase := os.Getenv("MYSQL_DATABASE")
 
-	connStr := fmt.Sprintf("%s:%s@%s/%s?parseTime=true", mysqlUser, mysqlPwd, mysqlHost, mysqlDatabase)
-	_db, err := sql.Open("mysql", connStr)
+	fmt.Printf("MYSQL_USER:%s", mysqlUser)
 
+	//connStr := fmt.Sprintf("%s:%s@%s/%s?parseTime=true", mysqlUser, mysqlPwd, mysqlHost, mysqlDatabase)
+	connStr := fmt.Sprintf("%s:%s@%s/%s", mysqlUser, mysqlPwd, mysqlHost, mysqlDatabase)
+	_db, err := sql.Open("mysql", connStr)
 	if err != nil {
 		log.Fatalf("fail: sql.Open, %v\n", err)
 	}
 
 	// ①-3
 	if err := _db.Ping(); err != nil {
-		log.Fatalf("fail: _db.Ping, %v\n", err)
+		log.Fatalf("fail: _db.Ping, %v\n", err.Error())
 	}
 	db = _db
 }
 
 // ② /userでリクエストされたらnameパラメーターと一致する名前を持つレコードをJSON形式で返す
 func handler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Headers", "*")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "GET,POST,OPTIONS,DELETE,PUT")
+	w.Header().Set("Content-Type", "application/json")
 	switch r.Method {
-	case http.MethodGet:
-		// ②-1
-		name := r.URL.Query().Get("name") // To be filled
-		if name == "" {
-			log.Println("fail: name is empty")
-			w.WriteHeader(http.StatusBadRequest)
+	case http.MethodOptions:
+		w.WriteHeader(http.StatusOK)
+		return
+	case http.MethodDelete:
+
+		// id := r.URL.Query().Get("id")
+		// if id == "" {
+		// 	log.Println("fail: content is empty")
+		// 	w.WriteHeader(http.StatusBadRequest)
+		// 	return
+		// }
+		type Delete struct {
+			Id string `json:"id"`
+		}
+		var delete Delete
+		json.NewDecoder(r.Body).Decode(&delete)
+		id := delete.Id
+
+		_, err := db.Query("DELETE FROM message WHERE id = ?", id)
+		if err != nil {
+			log.Printf("fail: db.Query, %v\n", err)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+	case http.MethodPut:
+
+		type UpdateMessage struct {
+			Id      string `json:"id"`
+			Content string `json:"content"`
+			Edited  string `json:"edited"`
+		}
+
+		var updatemessage UpdateMessage
+		json.NewDecoder(r.Body).Decode(&updatemessage)
+		id := updatemessage.Id
+		content := updatemessage.Content
+		edited := updatemessage.Edited
+
+		//query:="insert into`user`(`id`,`name`,`age`)values (id,name,age)"
+		//_,err:=db.ExecContext(context.Background(),query)
+		_, err := db.Exec("UPDATE message SET content=?,edited=? WHERE id=?", content, edited, id)
+		if err != nil {
+			log.Fatalf("impossible update message:%s", err)
 			return
 		}
 
+		// type responseMessage struct {
+		// 	Message string `json:"message"`
+		// }
+		// bytes, err := json.Marshal(responseMessage{
+		// 	Message: fmt.Sprintf("Id=%v", id),
+		// })
+		// if err != nil {
+		// 	w.WriteHeader(http.StatusInternalServerError)
+		// 	return
+		// }
+		// w.Write(bytes)
+		// w.WriteHeader(http.StatusOK)
+
+	case http.MethodGet:
+		// ②-1
+		// content := r.URL.Query().Get("content") // To be filled
+		// if content == "" {
+		// 	log.Println("fail: content is empty")
+		// 	w.WriteHeader(http.StatusBadRequest)
+		// 	return
+		// }
+
 		// ②-2
-		rows, err := db.Query("SELECT id, name, age FROM user WHERE name = ?", name)
+		//rows, err := db.Query("SELECT id, name, age FROM user WHERE name = ?", name)
+		//if err != nil {
+		//	log.Printf("fail: db.Query, %v\n", err)
+		//	w.WriteHeader(http.StatusInternalServerError)
+		//	return
+		//}
+		rows, err := db.Query("SELECT * FROM message")
 		if err != nil {
 			log.Printf("fail: db.Query, %v\n", err)
 			w.WriteHeader(http.StatusInternalServerError)
@@ -70,10 +145,11 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// ②-3
-		users := make([]UserResForHTTPGet, 0)
+		contents := make([]SendMessageResForHTTPGet, 0)
+		//
 		for rows.Next() {
-			var u UserResForHTTPGet
-			if err := rows.Scan(&u.Id, &u.Name, &u.Age); err != nil {
+			var s SendMessageResForHTTPGet
+			if err := rows.Scan(&s.Id, &s.EditorName, &s.Content, &s.Edited); err != nil {
 				log.Printf("fail: rows.Scan, %v\n", err)
 
 				if err := rows.Close(); err != nil { // 500を返して終了するが、その前にrowsのClose処理が必要
@@ -82,11 +158,11 @@ func handler(w http.ResponseWriter, r *http.Request) {
 				w.WriteHeader(http.StatusInternalServerError)
 				return
 			}
-			users = append(users, u)
+			contents = append(contents, s)
 		}
 
 		// ②-4
-		bytes, err := json.Marshal(users)
+		bytes, err := json.Marshal(contents)
 		if err != nil {
 			log.Printf("fail: json.Marshal, %v\n", err)
 			w.WriteHeader(http.StatusInternalServerError)
@@ -95,39 +171,49 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.Write(bytes)
 	case http.MethodPost:
-		type User struct {
-			Name string `json:"name"`
-			Age  int    `json:"age"`
+		//type User struct {
+		//	Name string `json:"name"`
+		//	Age  int    `json:"age"`
+		//}
+		type SendMessage struct {
+			Id         string `json:"id"`
+			EditorName string `json:"editorname"`
+			Content    string `json:"content"`
+			Edited     string   `json:"edited"`
 		}
-		fmt.Println(r)
-		var user User
-		fmt.Println(user)
-		json.NewDecoder(r.Body).Decode(&user)
 
-		name := user.Name
-		age := user.Age
+		fmt.Println(r)
+		//var user User
+		//fmt.Println(user)
+		//json.NewDecoder(r.Body).Decode(&user)
+
+		var sendmessage SendMessage
+		fmt.Println(sendmessage)
+		json.NewDecoder(r.Body).Decode(&sendmessage)
+		editorname := sendmessage.EditorName
+		content := sendmessage.Content
+		edited := sendmessage.Edited
 
 		t := time.Now()
 		entropy := ulid.Monotonic(rand.New(rand.NewSource(t.UnixNano())), 0)
 		n := ulid.MustNew(ulid.Timestamp(t), entropy)
 		id := n.String()
-		if utf8.RuneCountInString(name) > 50 {
-			w.WriteHeader(http.StatusBadRequest)
-			return
-		}
-		if age < 20 || 80 < age {
-			w.WriteHeader(http.StatusBadRequest)
-			return
-		}
+		//if utf8.RuneCountInString(name) > 50 {
+		//	w.WriteHeader(http.StatusBadRequest)
+		//	return
+		//}
+		//if age < 20 || 80 < age {
+		//	w.WriteHeader(http.StatusBadRequest)
+		//	return
+		//}
 
-		fmt.Println(name, age, id)
+		fmt.Println(editorname, content, edited, id)
 
 		//query:="insert into`user`(`id`,`name`,`age`)values (id,name,age)"
 		//_,err:=db.ExecContext(context.Background(),query)
-		_, err := db.Exec("INSERT INTO user (id, name, age) VALUES(?, ?, ?)", id, name, age)
+		_, err := db.Exec("INSERT INTO message (id, editorname, content,edited) VALUES(?, ?, ?,?)", id, editorname, content, edited)
 		if err != nil {
-			log.Fatalf("impossible insert user:%s", err)
-			w.WriteHeader(http.StatusInternalServerError)
+			log.Fatalf("impossible insert message:%s", err)
 			return
 		}
 		if err != nil {
